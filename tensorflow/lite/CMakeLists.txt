@@ -44,7 +44,7 @@ if(NOT TENSORFLOW_SOURCE_DIR)
   )
 endif()
 set(TF_SOURCE_DIR "${TENSORFLOW_SOURCE_DIR}/tensorflow")
-set(TFLITE_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+set(TFLITE_SOURCE_DIR "${TF_SOURCE_DIR}/lite")
 set(CMAKE_MODULE_PATH
   "${TFLITE_SOURCE_DIR}/tools/cmake/modules"
   ${CMAKE_MODULE_PATH}
@@ -259,6 +259,13 @@ populate_tflite_source_vars("kernels/internal/reference/integer_ops"
 populate_tflite_source_vars("kernels/internal/reference/sparse_ops"
   TFLITE_KERNEL_INTERNAL_REF_SPARSE_OPS_SRCS
 )
+populate_tflite_source_vars("profiling"
+  TFLITE_KERNEL_PROFILING_SRCS
+  FILTER "test_main\\.cc"
+)
+populate_tflite_source_vars("tools/optimize/sparsity"
+  TFLITE_TOOLS_OPTIMIZE_SPARSITY_SRCS
+)
 
 # Common include directories
 include_directories(
@@ -286,9 +293,11 @@ add_library(tensorflowlite
   ${TFLITE_KERNEL_INTERNAL_REF_SPARSE_OPS_SRCS}
   ${TFLITE_KERNEL_INTERNAL_REF_SRCS}
   ${TFLITE_KERNEL_INTERNAL_SRCS}
+  ${TFLITE_KERNEL_PROFILING_SRCS}
   ${TFLITE_KERNEL_SRCS}
   ${TFLITE_NNAPI_SRCS}
   ${TFLITE_SRCS}
+  ${TFLITE_TOOLS_OPTIMIZE_SPARSITY_SRCS}
 )
 target_link_libraries(tensorflowlite
   PUBLIC
